@@ -7,7 +7,7 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface ClientMapper {
-    ClientMapper toResponse(Client client);
+    ClientResponse toResponse(Client client);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tier", ignore = true)

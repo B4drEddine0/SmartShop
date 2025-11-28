@@ -1,8 +1,8 @@
 package org.example.smartshop.entity;
 
-import ch.qos.logback.core.net.server.Client;
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.smartshop.entity.Client;
 import org.example.smartshop.enums.UserRole;
 
 @Entity
