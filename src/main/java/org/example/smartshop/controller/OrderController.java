@@ -63,4 +63,27 @@ public class OrderController {
         List<OrderResponse> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
+
+    @PutMapping("/{id}/confirm")
+    public ResponseEntity<OrderResponse> confirmOrder(@PathVariable Long id, HttpSession session) {
+        SessionUser user = getCurrentUser(session);
+        if (user.getRole() != UserRole.ADMIN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        OrderResponse response = orderService.confirmOrder(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<OrderResponse> cancelOrder(@PathVariable Long id, HttpSession session) {
+        SessionUser user = getCurrentUser(session);
+        if (user.getRole() != UserRole.ADMIN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        OrderResponse response = orderService.cancelOrder(id);
+        return ResponseEntity.ok(response);
+    }
+
 }

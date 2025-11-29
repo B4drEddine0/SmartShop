@@ -188,4 +188,42 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
     }
+
+    @Override
+    @Transactional
+    public OrderResponse confirmOrder(Long id) {
+        Order order = getOrderEntityById(id);
+
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new RuntimeException("Only PENDING orders can be confirmed");
+        }
+
+        if (order.getMontantRestant() > 0) {
+            throw new RuntimeException("Order must be fully paid before confirmation");
+        }
+
+        order.setStatus(OrderStatus.CONFIRMED);
+        Order updated = orderRepository.save(order);
+
+        // Update client stats and loyalty tier
+        clientService.updateClientStats(order.getClient().getId(), order.getTotalTtc());
+
+        return orderMapper.toResponse(updated);
+    }
+
+    @Override
+    @Transactional
+    public OrderResponse cancelOrder(Long id) {
+        Order order = getOrderEntityById(id);
+
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new RuntimeException("Only PENDING orders can be canceled");
+        }
+
+        order.setStatus(OrderStatus.CANCELED);
+        Order updated = orderRepository.save(order);
+
+        return orderMapper.toResponse(updated);
+    }
+
 }
