@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.smartshop.dtos.request.LoginRequest;
 import org.example.smartshop.entity.User;
 import org.example.smartshop.enums.UserRole;
+import org.example.smartshop.exception.UnauthorizedException;
 import org.example.smartshop.repositories.ClientRepository;
 import org.example.smartshop.repositories.UserRepository;
 import org.example.smartshop.services.AuthService;
@@ -21,10 +22,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public SessionUser login(LoginRequest request,HttpSession session){
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(()-> new RuntimeException("Invalid username or password"));
+                .orElseThrow(()-> new UnauthorizedException("Invalid username or password"));
 
         if (!user.getPassword().equals(request.getPassword())){
-            throw new RuntimeException("Invalid username or password");
+            throw new UnauthorizedException("Invalid username or password");
         }
 
         SessionUser sessionUser = SessionUser.builder()

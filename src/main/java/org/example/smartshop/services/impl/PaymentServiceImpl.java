@@ -8,6 +8,7 @@ import org.example.smartshop.entity.Order;
 import org.example.smartshop.entity.Payment;
 import org.example.smartshop.enums.PaymentMethod;
 import org.example.smartshop.enums.PaymentStatus;
+import org.example.smartshop.exception.BusinessException;
 import org.example.smartshop.mapper.PaymentMapper;
 import org.example.smartshop.repositories.PaymentRepository;
 import org.example.smartshop.services.OrderService;
@@ -37,16 +38,16 @@ public class PaymentServiceImpl implements PaymentService {
         Order order = orderService.getOrderEntityById(request.getOrderId());
 
         if (order.getMontantRestant() <= 0) {
-            throw new RuntimeException("Order is already fully paid");
+            throw new BusinessException("Order is already fully paid");
         }
 
         if (request.getMontant() > order.getMontantRestant()) {
-            throw new RuntimeException("Payment amount exceeds remaining amount");
+            throw new BusinessException("Payment amount exceeds remaining amount");
         }
 
         // Validate cash limit
         if (request.getTypePaiement() == PaymentMethod.ESPECES && request.getMontant() > CASH_LIMIT) {
-            throw new RuntimeException("Cash payment cannot exceed " + CASH_LIMIT + " DH");
+            throw new BusinessException("Cash payment cannot exceed " + CASH_LIMIT + " DH");
         }
 
         // Validate required fields based on payment method
@@ -82,7 +83,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public PaymentResponse updatePaymentStatus(Long id, UpdatePaymentStatusRequest request) {
         Payment payment = paymentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Payment not found with id: " + id));
+                .orElseThrow(() -> new BusinessException("Payment not found with id: " + id));
 
         payment.setStatus(request.getStatus());
 
@@ -109,26 +110,26 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public PaymentResponse getPaymentById(Long id) {
         Payment payment = paymentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Payment not found with id: " + id));
+                .orElseThrow(() -> new BusinessException("Payment not found with id: " + id));
         return paymentMapper.toResponse(payment);
     }
 
     private void validatePaymentMethod(PaymentRequest request) {
         if (request.getTypePaiement() == PaymentMethod.CHEQUE) {
             if (request.getReference() == null || request.getBanque() == null || request.getDateEcheance() == null) {
-                throw new RuntimeException("CHEQUE requires reference, banque, and dateEcheance");
+                throw new BusinessException("CHEQUE requires reference, banque, and dateEcheance");
             }
         }
 
         if (request.getTypePaiement() == PaymentMethod.VIREMENT) {
             if (request.getReference() == null || request.getBanque() == null) {
-                throw new RuntimeException("VIREMENT requires reference and banque");
+                throw new BusinessException("VIREMENT requires reference and banque");
             }
         }
 
         if (request.getTypePaiement() == PaymentMethod.ESPECES) {
             if (request.getReference() == null) {
-                throw new RuntimeException("ESPECES requires reference (receipt number)");
+                throw new BusinessException("ESPECES requires reference (receipt number)");
             }
         }
     }

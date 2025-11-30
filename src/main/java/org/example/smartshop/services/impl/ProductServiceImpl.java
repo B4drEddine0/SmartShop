@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.smartshop.dtos.request.ProductRequest;
 import org.example.smartshop.dtos.response.ProductResponse;
 import org.example.smartshop.entity.Product;
+import org.example.smartshop.exception.BusinessException;
+import org.example.smartshop.exception.ResourceNotFoundException;
 import org.example.smartshop.mapper.ProductMapper;
 import org.example.smartshop.repositories.ProductRepository;
 import org.example.smartshop.services.ProductService;
@@ -65,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductEntityById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
     }
 
     @Override
@@ -74,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = getProductEntityById(productId);
 
         if (product.getStock() < quantity) {
-            throw new RuntimeException("Insufficient stock for product: " + product.getNom());
+            throw new BusinessException("Insufficient stock for product: " + product.getNom());
         }
 
         product.setStock(product.getStock() - quantity);

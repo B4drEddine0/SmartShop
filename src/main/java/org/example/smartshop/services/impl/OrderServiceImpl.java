@@ -9,6 +9,7 @@ import org.example.smartshop.entity.OrderItem;
 import org.example.smartshop.entity.Product;
 import org.example.smartshop.enums.CustomerTier;
 import org.example.smartshop.enums.OrderStatus;
+import org.example.smartshop.exception.BusinessException;
 import org.example.smartshop.mapper.OrderMapper;
 import org.example.smartshop.repositories.OrderRepository;
 import org.example.smartshop.services.ClientService;
@@ -40,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponse createOrder(OrderRequest request) {
         if (request.getItems() == null || request.getItems().isEmpty()) {
-            throw new RuntimeException("Order must contain at least one item");
+            throw new BusinessException("Order must contain at least one item");
         }
 
         Client client = clientService.getClientEntityById(request.getClientId());
@@ -186,7 +187,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getOrderEntityById(Long id) {
         return orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+                .orElseThrow(() -> new BusinessException("Order not found with id: " + id));
     }
 
     @Override
@@ -195,11 +196,11 @@ public class OrderServiceImpl implements OrderService {
         Order order = getOrderEntityById(id);
 
         if (order.getStatus() != OrderStatus.PENDING) {
-            throw new RuntimeException("Only PENDING orders can be confirmed");
+            throw new BusinessException("Only PENDING orders can be confirmed");
         }
 
         if (order.getMontantRestant() > 0) {
-            throw new RuntimeException("Order must be fully paid before confirmation");
+            throw new BusinessException("Order must be fully paid before confirmation");
         }
 
         order.setStatus(OrderStatus.CONFIRMED);
@@ -217,7 +218,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = getOrderEntityById(id);
 
         if (order.getStatus() != OrderStatus.PENDING) {
-            throw new RuntimeException("Only PENDING orders can be canceled");
+            throw new BusinessException("Only PENDING orders can be canceled");
         }
 
         order.setStatus(OrderStatus.CANCELED);

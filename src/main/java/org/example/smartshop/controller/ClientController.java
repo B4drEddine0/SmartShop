@@ -7,6 +7,7 @@ import org.example.smartshop.dtos.request.ClientRequest;
 import org.example.smartshop.dtos.response.ClientResponse;
 import org.example.smartshop.dtos.response.OrderResponse;
 import org.example.smartshop.enums.UserRole;
+import org.example.smartshop.exception.UnauthorizedException;
 import org.example.smartshop.services.ClientService;
 import org.example.smartshop.utils.SessionUser;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class ClientController {
     private SessionUser getCurrentUser(HttpSession session) {
         SessionUser user = (SessionUser) session.getAttribute("CURRENT_USER");
         if (user == null) {
-            throw new RuntimeException("Unauthorized");
+            throw new UnauthorizedException("Unauthorized");
         }
         return user;
     }

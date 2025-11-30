@@ -8,6 +8,8 @@ import org.example.smartshop.entity.Client;
 import org.example.smartshop.entity.User;
 import org.example.smartshop.enums.CustomerTier;
 import org.example.smartshop.enums.UserRole;
+import org.example.smartshop.exception.BusinessException;
+import org.example.smartshop.exception.ResourceNotFoundException;
 import org.example.smartshop.mapper.ClientMapper;
 import org.example.smartshop.mapper.OrderMapper;
 import org.example.smartshop.repositories.ClientRepository;
@@ -35,11 +37,11 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     public ClientResponse createClient(ClientRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists");
+            throw new BusinessException("Username already exists");
         }
 
         if (clientRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new BusinessException("Email already exists");
         }
 
         User user = User.builder()
@@ -74,7 +76,7 @@ public class ClientServiceImpl implements ClientService {
 
         if (!client.getEmail().equals(request.getEmail()) &&
                 clientRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new BusinessException("Email already exists");
         }
 
         clientMapper.updateEntity(request, client);
@@ -152,6 +154,6 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Client getClientEntityById(Long id) {
         return clientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Client not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
     }
 }
