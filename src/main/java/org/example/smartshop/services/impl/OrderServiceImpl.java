@@ -10,6 +10,7 @@ import org.example.smartshop.entity.Product;
 import org.example.smartshop.enums.CustomerTier;
 import org.example.smartshop.enums.OrderStatus;
 import org.example.smartshop.exception.BusinessException;
+import org.example.smartshop.exception.ResourceNotFoundException;
 import org.example.smartshop.mapper.OrderMapper;
 import org.example.smartshop.repositories.OrderRepository;
 import org.example.smartshop.services.ClientService;
@@ -187,7 +188,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getOrderEntityById(Long id) {
         return orderRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Order not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
     }
 
     @Override
