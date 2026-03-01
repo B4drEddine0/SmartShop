@@ -207,7 +207,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.CONFIRMED);
         Order updated = orderRepository.save(order);
 
-        // Update client stats and loyalty tier
+
         clientService.updateClientStats(order.getClient().getId(), order.getTotalTtc());
 
         return orderMapper.toResponse(updated);
@@ -227,5 +227,6 @@ public class OrderServiceImpl implements OrderService {
 
         return orderMapper.toResponse(updated);
     }
+
 
 }
