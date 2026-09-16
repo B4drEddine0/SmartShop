@@ -56,131 +56,125 @@ INSERT INTO products (nom, description, prix_unitaire, stock, deleted) VALUES ('
 INSERT INTO products (nom, description, prix_unitaire, stock, deleted) VALUES ('Câble RJ45 Cat6 (10m)', 'Blindé, haute vitesse, 10 mètres', 55.00, 200, false) ON CONFLICT DO NOTHING;
 
 -- =====================
--- ORDERS
+-- ORDERS (guarded by checking non-existence first)
 -- =====================
--- Order 1 - Karim (PLATINUM) - CONFIRMED
 INSERT INTO orders (client_id, date_creation, sous_total, montant_remise, montant_ht_apres_remise, tva, total_ttc, montant_restant, code_promo, status, taux_tva)
-VALUES (
-    (SELECT id FROM clients WHERE email = 'karim.alaoui@techmaroc.ma'),
-    '2024-11-20 14:30:00', 10450.00, 1567.50, 8882.50, 1776.50, 10659.00, 0.00, 'PLAT20', 'CONFIRMED', 0.20
-);
+SELECT id, '2024-11-20 14:30:00', 10450.00, 1567.50, 8882.50, 1776.50, 10659.00, 0.00, 'PLAT20', 'CONFIRMED', 0.20
+FROM clients WHERE email = 'karim.alaoui@techmaroc.ma'
+AND NOT EXISTS (SELECT 1 FROM orders o JOIN clients c ON o.client_id = c.id WHERE c.email = 'karim.alaoui@techmaroc.ma' AND o.date_creation = '2024-11-20 14:30:00');
 
--- Order 2 - Fatima (GOLD) - CONFIRMED
 INSERT INTO orders (client_id, date_creation, sous_total, montant_remise, montant_ht_apres_remise, tva, total_ttc, montant_restant, code_promo, status, taux_tva)
-VALUES (
-    (SELECT id FROM clients WHERE email = 'fatima.benali@infonet.ma'),
-    '2024-11-18 11:00:00', 4150.00, 290.50, 3859.50, 771.90, 4631.40, 0.00, NULL, 'CONFIRMED', 0.20
-);
+SELECT id, '2024-11-18 11:00:00', 4150.00, 290.50, 3859.50, 771.90, 4631.40, 0.00, NULL, 'CONFIRMED', 0.20
+FROM clients WHERE email = 'fatima.benali@infonet.ma'
+AND NOT EXISTS (SELECT 1 FROM orders o JOIN clients c ON o.client_id = c.id WHERE c.email = 'fatima.benali@infonet.ma' AND o.date_creation = '2024-11-18 11:00:00');
 
--- Order 3 - Youssef (GOLD) - PENDING
 INSERT INTO orders (client_id, date_creation, sous_total, montant_remise, montant_ht_apres_remise, tva, total_ttc, montant_restant, code_promo, status, taux_tva)
-VALUES (
-    (SELECT id FROM clients WHERE email = 'youssef.tazi@digitalpro.ma'),
-    '2024-11-15 16:00:00', 2230.00, 156.10, 2073.90, 414.78, 2488.68, 2488.68, NULL, 'PENDING', 0.20
-);
+SELECT id, '2024-11-15 16:00:00', 2230.00, 156.10, 2073.90, 414.78, 2488.68, 2488.68, NULL, 'PENDING', 0.20
+FROM clients WHERE email = 'youssef.tazi@digitalpro.ma'
+AND NOT EXISTS (SELECT 1 FROM orders o JOIN clients c ON o.client_id = c.id WHERE c.email = 'youssef.tazi@digitalpro.ma' AND o.date_creation = '2024-11-15 16:00:00');
 
--- Order 4 - Nadia (SILVER) - CONFIRMED
 INSERT INTO orders (client_id, date_creation, sous_total, montant_remise, montant_ht_apres_remise, tva, total_ttc, montant_restant, code_promo, status, taux_tva)
-VALUES (
-    (SELECT id FROM clients WHERE email = 'nadia.chraibi@smartbiz.ma'),
-    '2024-11-10 13:00:00', 1300.00, 0.00, 1300.00, 260.00, 1560.00, 0.00, NULL, 'CONFIRMED', 0.20
-);
+SELECT id, '2024-11-10 13:00:00', 1300.00, 0.00, 1300.00, 260.00, 1560.00, 0.00, NULL, 'CONFIRMED', 0.20
+FROM clients WHERE email = 'nadia.chraibi@smartbiz.ma'
+AND NOT EXISTS (SELECT 1 FROM orders o JOIN clients c ON o.client_id = c.id WHERE c.email = 'nadia.chraibi@smartbiz.ma' AND o.date_creation = '2024-11-10 13:00:00');
 
--- Order 5 - Hassan (SILVER) - CANCELED
 INSERT INTO orders (client_id, date_creation, sous_total, montant_remise, montant_ht_apres_remise, tva, total_ttc, montant_restant, code_promo, status, taux_tva)
-VALUES (
-    (SELECT id FROM clients WHERE email = 'hassan.idrissi@maroc-it.ma'),
-    '2024-11-05 15:00:00', 840.00, 0.00, 840.00, 168.00, 1008.00, 1008.00, NULL, 'CANCELED', 0.20
-);
+SELECT id, '2024-11-05 15:00:00', 840.00, 0.00, 840.00, 168.00, 1008.00, 1008.00, NULL, 'CANCELED', 0.20
+FROM clients WHERE email = 'hassan.idrissi@maroc-it.ma'
+AND NOT EXISTS (SELECT 1 FROM orders o JOIN clients c ON o.client_id = c.id WHERE c.email = 'hassan.idrissi@maroc-it.ma' AND o.date_creation = '2024-11-05 15:00:00');
 
--- Order 6 - Sara (BASIC) - PENDING
 INSERT INTO orders (client_id, date_creation, sous_total, montant_remise, montant_ht_apres_remise, tva, total_ttc, montant_restant, code_promo, status, taux_tva)
-VALUES (
-    (SELECT id FROM clients WHERE email = 'sara.mansouri@techsud.ma'),
-    '2024-10-22 10:00:00', 705.00, 0.00, 705.00, 141.00, 846.00, 846.00, NULL, 'PENDING', 0.20
-);
+SELECT id, '2024-10-22 10:00:00', 705.00, 0.00, 705.00, 141.00, 846.00, 846.00, NULL, 'PENDING', 0.20
+FROM clients WHERE email = 'sara.mansouri@techsud.ma'
+AND NOT EXISTS (SELECT 1 FROM orders o JOIN clients c ON o.client_id = c.id WHERE c.email = 'sara.mansouri@techsud.ma' AND o.date_creation = '2024-10-22 10:00:00');
 
 -- =====================
--- ORDER ITEMS
+-- ORDER ITEMS (using CTEs to safely resolve order IDs)
 -- =====================
--- Order 1 items (Karim)
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'karim.alaoui@techmaroc.ma') AND date_creation = '2024-11-20 14:30:00')
 INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
-VALUES ((SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'karim.alaoui@techmaroc.ma') LIMIT 1),
-        (SELECT id FROM products WHERE nom = 'Laptop HP ProBook 450'), 1, 8500.00, 8500.00);
-INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
-VALUES ((SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'karim.alaoui@techmaroc.ma') LIMIT 1),
-        (SELECT id FROM products WHERE nom = 'Dell Monitor 24"'), 1, 1950.00, 1950.00);
+SELECT o.id, p.id, 1, 8500.00, 8500.00 FROM o, products p WHERE p.nom = 'Laptop HP ProBook 450'
+AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.id AND oi.product_id = p.id);
 
--- Order 2 items (Fatima)
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'karim.alaoui@techmaroc.ma') AND date_creation = '2024-11-20 14:30:00')
 INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
-VALUES ((SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'fatima.benali@infonet.ma') LIMIT 1),
-        (SELECT id FROM products WHERE nom = 'Imprimante HP LaserJet Pro'), 1, 3200.00, 3200.00);
-INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
-VALUES ((SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'fatima.benali@infonet.ma') LIMIT 1),
-        (SELECT id FROM products WHERE nom = 'Clavier Logitech MK270'), 2, 280.00, 560.00);
-INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
-VALUES ((SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'fatima.benali@infonet.ma') LIMIT 1),
-        (SELECT id FROM products WHERE nom = 'Câble RJ45 Cat6 (10m)'), 7, 55.00, 385.00);
+SELECT o.id, p.id, 1, 1950.00, 1950.00 FROM o, products p WHERE p.nom = 'Dell Monitor 24"'
+AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.id AND oi.product_id = p.id);
 
--- Order 3 items (Youssef)
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'fatima.benali@infonet.ma') AND date_creation = '2024-11-18 11:00:00')
 INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
-VALUES ((SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'youssef.tazi@digitalpro.ma') LIMIT 1),
-        (SELECT id FROM products WHERE nom = 'Switch TP-Link 8 ports'), 2, 420.00, 840.00);
-INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
-VALUES ((SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'youssef.tazi@digitalpro.ma') LIMIT 1),
-        (SELECT id FROM products WHERE nom = 'Webcam Logitech C920'), 1, 750.00, 750.00);
-INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
-VALUES ((SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'youssef.tazi@digitalpro.ma') LIMIT 1),
-        (SELECT id FROM products WHERE nom = 'Câble RJ45 Cat6 (10m)'), 12, 55.00, 660.00);
+SELECT o.id, p.id, 1, 3200.00, 3200.00 FROM o, products p WHERE p.nom = 'Imprimante HP LaserJet Pro'
+AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.id AND oi.product_id = p.id);
 
--- Order 4 items (Nadia)
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'fatima.benali@infonet.ma') AND date_creation = '2024-11-18 11:00:00')
 INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
-VALUES ((SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'nadia.chraibi@smartbiz.ma') LIMIT 1),
-        (SELECT id FROM products WHERE nom = 'Disque Dur Externe 1TB'), 2, 650.00, 1300.00);
+SELECT o.id, p.id, 2, 280.00, 560.00 FROM o, products p WHERE p.nom = 'Clavier Logitech MK270'
+AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.id AND oi.product_id = p.id);
 
--- Order 5 items (Hassan)
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'fatima.benali@infonet.ma') AND date_creation = '2024-11-18 11:00:00')
 INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
-VALUES ((SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'hassan.idrissi@maroc-it.ma') LIMIT 1),
-        (SELECT id FROM products WHERE nom = 'Onduleur APC 650VA'), 1, 980.00, 980.00);
+SELECT o.id, p.id, 7, 55.00, 385.00 FROM o, products p WHERE p.nom = 'Câble RJ45 Cat6 (10m)'
+AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.id AND oi.product_id = p.id);
 
--- Order 6 items (Sara)
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'youssef.tazi@digitalpro.ma') AND date_creation = '2024-11-15 16:00:00')
 INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
-VALUES ((SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'sara.mansouri@techsud.ma') LIMIT 1),
-        (SELECT id FROM products WHERE nom = 'Clavier Logitech MK270'), 1, 280.00, 280.00);
+SELECT o.id, p.id, 2, 420.00, 840.00 FROM o, products p WHERE p.nom = 'Switch TP-Link 8 ports'
+AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.id AND oi.product_id = p.id);
+
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'youssef.tazi@digitalpro.ma') AND date_creation = '2024-11-15 16:00:00')
 INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
-VALUES ((SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'sara.mansouri@techsud.ma') LIMIT 1),
-        (SELECT id FROM products WHERE nom = 'Câble RJ45 Cat6 (10m)'), 5, 55.00, 275.00);
+SELECT o.id, p.id, 1, 750.00, 750.00 FROM o, products p WHERE p.nom = 'Webcam Logitech C920'
+AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.id AND oi.product_id = p.id);
+
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'youssef.tazi@digitalpro.ma') AND date_creation = '2024-11-15 16:00:00')
 INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
-VALUES ((SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'sara.mansouri@techsud.ma') LIMIT 1),
-        (SELECT id FROM products WHERE nom = 'Webcam Logitech C920'), 1, 750.00, 750.00);
+SELECT o.id, p.id, 12, 55.00, 660.00 FROM o, products p WHERE p.nom = 'Câble RJ45 Cat6 (10m)'
+AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.id AND oi.product_id = p.id);
+
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'nadia.chraibi@smartbiz.ma') AND date_creation = '2024-11-10 13:00:00')
+INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
+SELECT o.id, p.id, 2, 650.00, 1300.00 FROM o, products p WHERE p.nom = 'Disque Dur Externe 1TB'
+AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.id AND oi.product_id = p.id);
+
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'hassan.idrissi@maroc-it.ma') AND date_creation = '2024-11-05 15:00:00')
+INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
+SELECT o.id, p.id, 1, 980.00, 980.00 FROM o, products p WHERE p.nom = 'Onduleur APC 650VA'
+AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.id AND oi.product_id = p.id);
+
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'sara.mansouri@techsud.ma') AND date_creation = '2024-10-22 10:00:00')
+INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
+SELECT o.id, p.id, 1, 280.00, 280.00 FROM o, products p WHERE p.nom = 'Clavier Logitech MK270'
+AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.id AND oi.product_id = p.id);
+
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'sara.mansouri@techsud.ma') AND date_creation = '2024-10-22 10:00:00')
+INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
+SELECT o.id, p.id, 5, 55.00, 275.00 FROM o, products p WHERE p.nom = 'Câble RJ45 Cat6 (10m)'
+AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.id AND oi.product_id = p.id);
+
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'sara.mansouri@techsud.ma') AND date_creation = '2024-10-22 10:00:00')
+INSERT INTO order_items (order_id, product_id, quantite, prix_unitaire, total_ligne)
+SELECT o.id, p.id, 1, 750.00, 750.00 FROM o, products p WHERE p.nom = 'Webcam Logitech C920'
+AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.order_id = o.id AND oi.product_id = p.id);
 
 -- =====================
 -- PAYMENTS
 -- =====================
--- Payment for Order 1 (Karim - fully paid via virement)
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'karim.alaoui@techmaroc.ma') AND date_creation = '2024-11-20 14:30:00')
 INSERT INTO payments (order_id, numero_paiement, montant, type_paiement, date_paiement, date_encaissement, status, reference, banque, date_echeance)
-VALUES (
-    (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'karim.alaoui@techmaroc.ma') LIMIT 1),
-    1, 10659.00, 'VIREMENT', '2024-11-20 15:00:00', '2024-11-21', 'ENCAISSE', 'VIR-2024-001', 'Attijariwafa Bank', NULL
-);
+SELECT o.id, 1, 10659.00, 'VIREMENT', '2024-11-20 15:00:00', '2024-11-21', 'ENCAISSE', 'VIR-2024-001', 'Attijariwafa Bank', NULL FROM o
+WHERE NOT EXISTS (SELECT 1 FROM payments pay WHERE pay.order_id = o.id AND pay.numero_paiement = 1);
 
--- Payment for Order 2 (Fatima - cheque)
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'fatima.benali@infonet.ma') AND date_creation = '2024-11-18 11:00:00')
 INSERT INTO payments (order_id, numero_paiement, montant, type_paiement, date_paiement, date_encaissement, status, reference, banque, date_echeance)
-VALUES (
-    (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'fatima.benali@infonet.ma') LIMIT 1),
-    1, 4631.40, 'CHEQUE', '2024-11-18 12:00:00', '2024-11-25', 'ENCAISSE', 'CHQ-2024-045', 'CIH Bank', '2024-11-25'
-);
+SELECT o.id, 1, 4631.40, 'CHEQUE', '2024-11-18 12:00:00', '2024-11-25', 'ENCAISSE', 'CHQ-2024-045', 'CIH Bank', '2024-11-25' FROM o
+WHERE NOT EXISTS (SELECT 1 FROM payments pay WHERE pay.order_id = o.id AND pay.numero_paiement = 1);
 
--- Payment for Order 3 (Youssef - pending virement)
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'youssef.tazi@digitalpro.ma') AND date_creation = '2024-11-15 16:00:00')
 INSERT INTO payments (order_id, numero_paiement, montant, type_paiement, date_paiement, date_encaissement, status, reference, banque, date_echeance)
-VALUES (
-    (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'youssef.tazi@digitalpro.ma') LIMIT 1),
-    1, 2488.68, 'VIREMENT', '2024-11-15 17:00:00', NULL, 'EN_ATTENTE', 'VIR-2024-002', 'BMCE Bank', '2024-11-30'
-);
+SELECT o.id, 1, 2488.68, 'VIREMENT', '2024-11-15 17:00:00', NULL, 'EN_ATTENTE', 'VIR-2024-002', 'BMCE Bank', '2024-11-30' FROM o
+WHERE NOT EXISTS (SELECT 1 FROM payments pay WHERE pay.order_id = o.id AND pay.numero_paiement = 1);
 
--- Payment for Order 4 (Nadia - especes)
+WITH o AS (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'nadia.chraibi@smartbiz.ma') AND date_creation = '2024-11-10 13:00:00')
 INSERT INTO payments (order_id, numero_paiement, montant, type_paiement, date_paiement, date_encaissement, status, reference, banque, date_echeance)
-VALUES (
-    (SELECT id FROM orders WHERE client_id = (SELECT id FROM clients WHERE email = 'nadia.chraibi@smartbiz.ma') LIMIT 1),
-    1, 1560.00, 'ESPECES', '2024-11-10 14:00:00', '2024-11-10', 'ENCAISSE', NULL, NULL, NULL
-);
+SELECT o.id, 1, 1560.00, 'ESPECES', '2024-11-10 14:00:00', '2024-11-10', 'ENCAISSE', NULL, NULL, NULL FROM o
+WHERE NOT EXISTS (SELECT 1 FROM payments pay WHERE pay.order_id = o.id AND pay.numero_paiement = 1);
